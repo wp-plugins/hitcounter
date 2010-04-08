@@ -3,7 +3,7 @@
 Contributors:      Tom de Bruin, Tom Chippendale
 Plugin Name:       hitcounter
 Plugin URI:        http://posterous.deadlyhifi.com/hitcounter-wordpress-plugin-to-track-and-disp
-Tags:              post count, hit count, stats, statistics
+Tags:              view count, hit count, stats, statistics, readers, reader views
 Author URI:        http://www.deadlyhifi.com
 Author:            Tom de Bruin
 Tested up to:      2.9
