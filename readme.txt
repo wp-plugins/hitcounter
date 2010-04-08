@@ -6,15 +6,15 @@ Plugin URI:        http://posterous.deadlyhifi.com/hitcounter-wordpress-plugin-t
 Tags:              post count, hit count, stats, statistics
 Author URI:        http://www.deadlyhifi.com
 Author:            Tom de Bruin
-Requires at least: 2.3
 Tested up to:      2.9
 Stable tag:        1.0
 Version:           1.0
 
 == Description ==
 
-A simple counter for the number of visitors to your site. Distinguishes between robots, registered human, and non registered humans.
-Stores the data in a database table by the name of 'hitcounter'.
+A simple plugin to count and display the number of visitors on your blog posts and/or pages (i.e. a read count).
+It distinguishes between robots, registered human, and non registered humans.
+The data is stored in a database table by the name of 'hitcounter'.
 
 == Installation ==
 
