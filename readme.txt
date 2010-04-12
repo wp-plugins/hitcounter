@@ -7,12 +7,12 @@ Tags:              view count, hit count, stats, statistics, readers, reader vie
 Author URI:        http://www.deadlyhifi.com
 Author:            Tom de Bruin
 Tested up to:      2.9
-Stable tag:        1.0
-Version:           1.0
+Stable tag:        1.0.1
+Version:           1.0.1
 
 == Description ==
 
-A simple plugin to count and display the number of visitors on your blog posts and/or pages (i.e. a read count).
+A simple plugin to count and display the number of visitors on your blog posts (i.e. a read count).
 It distinguishes between robots, registered human, and non registered humans.
 The data is stored in a database table by the name of 'hitcounter'.
 
@@ -30,6 +30,8 @@ Which would output: Wow, 100 people read this.
 
 = 1.0 =
 Initial release.
+=1.0.1 =
+Fixed a silly mistake where the_content was not returned correctly if not on is_single().
 
 == Frequently Asked Questions ==
 

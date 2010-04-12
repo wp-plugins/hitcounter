@@ -3,7 +3,7 @@
 Plugin Name: hitcounter
 Plugin URI: http://posterous.deadlyhifi.com/hitcounter-wordpress-plugin-to-track-and-disp
 Description: Enables You To Display How Many Times A Post Had Been Viewed By User Or Bot.
-Version: 1.0
+Version: 1.0.1
 Author: Tom de Bruin
 Author URI: http://deadlyhifi.com
 
@@ -11,6 +11,24 @@ Place <?php userViews(); ?> in your template files to output the number of views
 The default output will be <span class="views">Views: 100</span>
 If you want to override the output use <?php userViews('Wow, ',' people read this.'); ?>
 Which would output: Wow, 100 people read this.
+
+
+GNU General Public License, version 2
+Copyright (C) 2010, Singletrack Mountain Bike Magazine (Gofar Enterprises)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 //error_reporting(E_ALL);
@@ -69,7 +87,7 @@ function hc_install() {
  */
 function detectAgent($content) {
 
-	if ( is_single() || is_page() ) {
+	if ( is_single() ) {
 
 		$post_id = get_the_ID();
 		$agent = strtolower($_SERVER['HTTP_USER_AGENT']);
@@ -83,8 +101,8 @@ function detectAgent($content) {
 		}
 
 		logCount($agent, $post_id);
-		return $content;
 	}
+	return $content;
 }
 
 
