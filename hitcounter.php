@@ -21,6 +21,7 @@ Which would output: Wow, 100 people read this.
 
 GNU General Public License, version 2
 Copyright (C) 2010, Singletrack Mountain Bike Magazine (Gofar Enterprises)
+http://www.singletrackworld.com
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
