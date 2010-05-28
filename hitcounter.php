@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: hitcounter
-Plugin URI: http://posterous.deadlyhifi.com/hitcounter-wordpress-plugin-to-track-and-disp
+Plugin URI: http://wordpress.org/extend/plugins/hitcounter/
 Description: Enables You To Display How Many Times A Post Had Been Viewed By User Or Bot.
-Version: 1.0.1
+Version: 1.1
 Author: Tom de Bruin
 Author URI: http://deadlyhifi.com
 
