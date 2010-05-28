@@ -2,13 +2,13 @@
 
 Contributors:      Tom de Bruin, Tom Chippendale
 Plugin Name:       hitcounter
-Plugin URI:        http://posterous.deadlyhifi.com/hitcounter-wordpress-plugin-to-track-and-disp
+Plugin URI:        http://wordpress.org/extend/plugins/hitcounter/
 Tags:              view count, hit count, stats, statistics, readers, reader views
 Author URI:        http://www.deadlyhifi.com
 Author:            Tom de Bruin
 Tested up to:      2.9
-Stable tag:        1.0.1
-Version:           1.0.1
+Stable tag:        1.1
+Version:           1.1
 
 == Description ==
 
@@ -32,11 +32,19 @@ Which would output: Wow, 100 people read this.
 Initial release.
 =1.0.1 =
 Fixed a silly mistake where the_content was not returned correctly if not on is_single().
+=1.1=
+Added icons to represent users and robots.
+Added column to post edit page to show views counts.
 
 == Frequently Asked Questions ==
 
 If installing on WPMU activate the plugin on a per blog basis rather than the activate sitewide. 
 At this stage I'm not sure how to make it MU compatible.
+
+Icons from "Token" Icon Set by brsev:
+
+http://brsev.com/
+http://brsev.deviantart.com/art/Token-128429570
 
 == Donations ==
 
