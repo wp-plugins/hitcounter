@@ -2,8 +2,8 @@
 /*
 Plugin Name: hitcounter
 Plugin URI: http://wordpress.org/extend/plugins/hitcounter/
-Description: Enables You To Display How Many Times A Post Had Been Viewed By User Or Bot.
-Version: 1.1
+Description: Enables You To Display How Many Times A Post Had Been Viewed By User Or Bot. Don't forget to visit the options page (Settings > Hitcounter) to change settings.
+Version: 1.2
 Author: Tom de Bruin
 Author URI: http://deadlyhifi.com
 
@@ -52,7 +52,8 @@ global $hc_db_version;
 $hc_db_version = "1.0";
 global $hc_table;
 $hc_table = $wpdb->prefix.'hitcounter';
-
+global $hc_options;
+$hc_options = get_option('hitcounter_options');
 
 /**
  * Create the databases
@@ -78,7 +79,8 @@ $hc_table = $wpdb->prefix.'hitcounter';
 		if ($wpdb->get_var("show tables like '$hc_table'") != $hc_table) {
 	
 			dbDelta($sql);
-			add_option( "hc_db_version", $hc_db_version, '', 'yes' );
+			add_option( 'hc_db_version', $hc_db_version, '', 'yes' );
+			
 		}
 	
 		// update table if things have changed.
@@ -86,7 +88,7 @@ $hc_table = $wpdb->prefix.'hitcounter';
 		if ( $installed_ver != $hc_db_version ) {
 	
 			dbDelta($sql);
-			update_option( "hc_db_version", $hc_db_version, '', 'yes' );
+			update_option( 'hc_db_version', $hc_db_version, '', 'yes' );
 		}
 	}
 	
@@ -119,6 +121,9 @@ $hc_table = $wpdb->prefix.'hitcounter';
 		return $content;
 	}
 	
+if ( $hc_options['excerpt'] )
+	add_filter('the_excerpt', 'detectAgent');
+else	
 	add_filter('the_content', 'detectAgent');
 
 /**
@@ -196,19 +201,17 @@ $hc_table = $wpdb->prefix.'hitcounter';
 // fill the data viewer with the data	
 	function userViewsPostAdminData() {
 		global $post;
-			
-	       	$plugurl = WP_PLUGIN_URL.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
 	       	 
 	        $views = get_views($post->ID);
 	
 			// total humans
-			echo '<p style="background: url('.$plugurl.'/icons/iconic.png) no-repeat 0 -150px; padding-left: 14px;">'.$views[3].' total humans</p>';
+			echo '<p class="iconic humans"><strong>'.$views[3].'</strong> total humans</p>';
 			// registered humans
-			echo '<p style="background: url('.$plugurl.'/icons/iconic.png) no-repeat 0 -50px; padding-left: 14px;">'.$views[1].'</strong> registered humans</p>';
+			echo '<p class="iconic registered"><strong>'.$views[1].'</strong> registered humans</p>';
 			// unregistered humans
-			echo '<p style="background: url('.$plugurl.'/icons/iconic.png) no-repeat 0 -100px; padding-left: 14px;">'.$views[2].'</strong> unregistered humans</p>';
+			echo '<p class="iconic unregistered"><strong>'.$views[2].'</strong> unregistered humans</p>';
 			// robots
-			echo '<p style="background: url('.$plugurl.'/icons/iconic.png) no-repeat 0 0; padding-left: 14px;">'.$views[0].'</strong> robots</p>';
+			echo '<p class="iconic robots"><strong>'.$views[0].'</strong> robots</p>';
 	}
 
 
@@ -221,37 +224,149 @@ $hc_table = $wpdb->prefix.'hitcounter';
 	    return $defaults;
 	}
 
-	add_filter( 'manage_posts_columns', 'views_columns' );
 
 // fill that column with view data
 	function views_custom_column($column_name, $id) {
+		global $hc_options;
+	    
 	    if( $column_name == 'views' ) {
-
-	       	$plugurl = WP_PLUGIN_URL.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
 
 	        $views = get_views($id);
 
-			// total humans
-			echo '<span style="background: url('.$plugurl.'/icons/iconic.png) no-repeat 0 -150px; padding-left: 14px;">'.$views[3].'</strong></span> ';
-			// robots
-			echo '<span style="background: url('.$plugurl.'/icons/iconic.png) no-repeat 0 0; padding-left: 14px;">'.$views[0].'</strong></span><br />';
-			// registered humans
-			echo '<span style="background: url('.$plugurl.'/icons/iconic.png) no-repeat 0 -50px; padding-left: 14px;">'.$views[1].'</strong></span> ';
-			// unregistered humans
-			echo '<span style="background: url('.$plugurl.'/icons/iconic.png) no-repeat 0 -100px; padding-left: 14px;">'.$views[2].'</strong></span>';
-
-	    }      
+			if ( $hc_options['display'] ) {
+				// total humans
+				echo '<span class="iconic humans">'.$views[3].'</span> ';
+				
+				if ( !$hc_options['displaydetail'] ) echo '<br />';
+				
+				// robots
+				echo '<span class="iconic robots">'.$views[0].'</span>';
+			}
+			
+			if ( $hc_options['display'] && $hc_options['displaydetail'] ) echo '<br />';
+			
+			if ( $hc_options['displaydetail'] ) {
+				// registered humans
+				echo '<span class="iconic registered">'.$views[1].'</span> ';
+				
+				if ( !$hc_options['display'] ) echo '<br />';
+				
+				// unregistered humans
+				echo '<span class="iconic unregistered">'.$views[2].'</span>';
+			}
+	    }
 	}
 
-	add_action('manage_posts_custom_column', 'views_custom_column', 10, 2);
+// only display the column if the options are enabled.
+	if ( $hc_options['display'] || $hc_options['displaydetail'] ) {
+
+		add_filter( 'manage_posts_columns', 'views_columns' );
+		add_action('manage_posts_custom_column', 'views_custom_column', 10, 2);
+
+	}
 	
 // make the column the correct width
 	function views_custom_column_css() {
+		
+		$plugurl = WP_PLUGIN_URL.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
 	?>
-	<style type="text/css">/* hitcounter */.fixed .column-views {width: 15%;}</style>
+	<style type="text/css">/* hitcounter */
+	.fixed .column-views {width:12%;}
+	.iconic {background: url(<?php echo $plugurl; ?>/icons/iconic.png) no-repeat; padding-left: 14px;}
+	.iconic.robots {background-position:0 0;}
+	.iconic.humans {background-position:0 -150px;}
+	.iconic.unregistered {background-position:0 -100px;}
+	.iconic.registered {background-position:0 -50px;}
+	</style>
+	
 	<?php
 	}
 
 	add_action('admin_head', 'views_custom_column_css');
+
+
+/////////////////////////////////////
+
+/*
+ * Create the options page
+ * http://codex.wordpress.org/Creating_Options_Pages
+ * http://codex.wordpress.org/Function_Reference/register_setting
+ * http://planetozh.com/blog/2009/05/handling-plugins-options-in-wordpress-28-with-register_setting/
+ */
+	function hitcounter_options_menu() {
+	
+		add_options_page('Hitcounter', 'Hitcounter', 'manage_options', 'hitcounter', 'hitcounter_settings_page');
+	
+		//call register settings function
+		add_action( 'admin_init', 'register_hitcounter_settings' );
+	
+	}
+	
+	// create custom plugin settings menu
+	add_action('admin_menu', 'hitcounter_options_menu');
+
+
+//register our settings
+	function register_hitcounter_settings() {
+
+		register_setting( 'hitcounter-settings-group', 'hitcounter_options' );
+
+	}
+
+	function hitcounter_settings_page() {
+		global $hc_options;
+	?>
+	<div class="wrap">
+	
+	<div id="icon-options-general" class="icon32"><br /></div>
+	<h2>Hitcounter Options</h2>
+
+	<form method="post" action="options.php">
+	    <?php settings_fields( 'hitcounter-settings-group' ); ?>
+	    
+	    <table class="form-table">
+	    
+	        <tr valign="top">
+		        <th scope="row" colspan="2"><h3>Show or hide view data on posts listing page</h3></th>
+	        </tr>
+	    
+	        <tr valign="top">
+	        <th scope="row"><span class="iconic humans">100</span> <span class="iconic robots">100</span></th>
+		        <td>
+		        	<input type="checkbox" name="hitcounter_options[display]" value="1" <?php checked('1', $hc_options['display']); ?> />
+		        	<span class="description">Show human and robots view counts.</span>
+		        </td>
+	        </tr>
+
+	        <tr valign="top">
+		        <th scope="row"><span class="iconic registered">100</span> <span class="iconic unregistered">100</span></th>
+		        <td>
+		        	<input type="checkbox" name="hitcounter_options[displaydetail]" value="1" <?php checked('1', $hc_options['displaydetail']); ?> />
+		        	<span class="description">Show registered and unregistered view counts.</span>
+		        </td>
+	        </tr>
+
+	        <tr valign="top">
+		        <th scope="row" colspan="2"><h3>Double Count Fix</h3></th>
+	        </tr>
+
+	        <tr valign="top">
+		        <th scope="row">Act on the_excerpt(); only</th>
+		        <td>
+		        	<input type="checkbox" name="hitcounter_options[excerpt]" value="1" <?php checked('1', $hc_options['excerpt']); ?> />
+		        	<span class="description">If you have both the_excerpt(); and the_content(); on your single post page the counter will react twice causing increments of 2 on each page visit.<br />Check this box to fix this issue.</span>
+		        </td>
+	        </tr>
+
+		</table>
+	    
+	    <p class="submit">
+	    <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+	    </p>
+	
+	</form>
+	</div>
+
+<?php }
 
 ?>

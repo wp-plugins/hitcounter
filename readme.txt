@@ -7,8 +7,8 @@ Tags:              view count, hit count, stats, statistics, readers, reader vie
 Author URI:        http://www.deadlyhifi.com
 Author:            Tom de Bruin
 Tested up to:      2.9
-Stable tag:        1.1
-Version:           1.1
+Stable tag:        1.2
+Version:           1.2
 
 == Description ==
 
@@ -30,11 +30,18 @@ Which would output: Wow, 100 people read this.
 
 = 1.0 =
 Initial release.
+
 =1.0.1 =
 Fixed a silly mistake where the_content was not returned correctly if not on is_single().
+
 =1.1=
 Added icons to represent users and robots.
 Added column to post edit page to show views counts.
+
+=1.2=
+Add options page to allow view counts to be switched on or off on the post listings page.
+Added option to fire hit on the_excerpt() rather than the_content() if both are displayed on your single post page. Therefore fixing the "double count" issue.
+(http://wordpress.org/support/topic/404253)
 
 == Frequently Asked Questions ==
 
